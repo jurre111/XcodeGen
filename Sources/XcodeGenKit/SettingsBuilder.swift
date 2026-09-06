@@ -6,7 +6,6 @@ import XcodeProj
 import Yams
 
 extension Project {
-
     public func getProjectBuildSettings(config: Config) -> BuildSettings {
         var buildSettings: BuildSettings = [:]
 
@@ -217,35 +216,47 @@ private var configFileSettings: [String: Cached<BuildSettings>] = [:]
 // cached setting preset settings
 private var settingPresetSettings: [String: Cached<BuildSettings>] = [:]
 
-extension SettingsPresetFile {
+let embeddedSettingPresets: [String: String] = [
+    "Product_Platform/application_macOS": "ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon\n",
+    "Product_Platform/application_visionOS": "ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon\n",
+    "Product_Platform/app-extension_macOS": "LD_RUNPATH_SEARCH_PATHS: [\"$(inherited)\", \"@executable_path/../Frameworks\", \"@executable_path/../../../../Frameworks\"]\n",
+    "Product_Platform/application_tvOS": "ASSETCATALOG_COMPILER_APPICON_NAME: App Icon & Top Shelf Image\nASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME: LaunchImage\n",
+    "Product_Platform/application_iOS": "CODE_SIGN_IDENTITY: iPhone Developer\nASSETCATALOG_COMPILER_APPICON_NAME: AppIcon\n",
+    "Product_Platform/application_watchOS": "ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon\n",
+    "Product_Platform/bundle.unit-test_macOS": "LD_RUNPATH_SEARCH_PATHS: [\"$(inherited)\", \"@executable_path/../Frameworks\", \"@loader_path/../Frameworks\"]\n",
+    "Configs/release": "---\n# Settings take from the following file and sorted\n# /Applications/Xcode.app/Contents/Developer/Library/Xcode/Templates/Project Templates/Base/Base_ProjectSettings.xctemplate/TemplateInfo.plist\nDEBUG_INFORMATION_FORMAT: dwarf-with-dsym\nENABLE_NS_ASSERTIONS: NO\nMTL_ENABLE_DEBUG_INFO: NO\n\n# Swift Settings\nSWIFT_COMPILATION_MODE: wholemodule\nSWIFT_OPTIMIZATION_LEVEL: -O\n",
+    "Configs/debug": "---\n# Settings take from the following file and sorted\n# /Applications/Xcode.app/Contents/Developer/Library/Xcode/Templates/Project Templates/Base/Base_ProjectSettings.xctemplate/TemplateInfo.plist\nDEBUG_INFORMATION_FORMAT: dwarf\nENABLE_TESTABILITY: YES\nGCC_DYNAMIC_NO_PIC: NO\nGCC_OPTIMIZATION_LEVEL: '0'\nGCC_PREPROCESSOR_DEFINITIONS: [\"$(inherited)\", \"DEBUG=1\"]\nMTL_ENABLE_DEBUG_INFO: INCLUDE_SOURCE\nONLY_ACTIVE_ARCH: YES\n\n# Swift Settings\nSWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG\nSWIFT_OPTIMIZATION_LEVEL: -Onone\n",
+    "Platforms/tvOS": "LD_RUNPATH_SEARCH_PATHS: [\"$(inherited)\", \"@executable_path/Frameworks\"]\nSDKROOT: appletvos\nTARGETED_DEVICE_FAMILY: 3\n",
+    "Platforms/watchOS": "SDKROOT: watchos\nSKIP_INSTALL: 'YES'\nTARGETED_DEVICE_FAMILY: 4\n",
+    "Platforms/visionOS": "LD_RUNPATH_SEARCH_PATHS: [\"$(inherited)\", \"@executable_path/Frameworks\"]\nSDKROOT: xros\nTARGETED_DEVICE_FAMILY: 7\n",
+    "Platforms/iOS": "LD_RUNPATH_SEARCH_PATHS: [\"$(inherited)\", \"@executable_path/Frameworks\"]\nSDKROOT: iphoneos\nTARGETED_DEVICE_FAMILY: '1,2'\n",
+    "Platforms/macOS": "LD_RUNPATH_SEARCH_PATHS: [\"$(inherited)\", \"@executable_path/../Frameworks\"]\nSDKROOT: macosx\nCOMBINE_HIDPI_IMAGES: 'YES'\n",
+    "base": "---\n# Settings take from the following file and sorted\n# /Applications/Xcode.app/Contents/Developer/Library/Xcode/Templates/Project Templates/Base/Base_ProjectSettings.xctemplate/TemplateInfo.plist\nALWAYS_SEARCH_USER_PATHS: NO\nCLANG_ANALYZER_NONNULL: YES\nCLANG_ANALYZER_NUMBER_OBJECT_CONVERSION: YES_AGGRESSIVE\nCLANG_CXX_LANGUAGE_STANDARD: gnu++14\nCLANG_CXX_LIBRARY: libc++\nCLANG_ENABLE_MODULES: YES\nCLANG_ENABLE_OBJC_ARC: YES\nCLANG_ENABLE_OBJC_WEAK: YES\nCLANG_WARN_BLOCK_CAPTURE_AUTORELEASING: YES\nCLANG_WARN_BOOL_CONVERSION: YES\nCLANG_WARN_COMMA: YES\nCLANG_WARN_CONSTANT_CONVERSION: YES\nCLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS: YES\nCLANG_WARN_DIRECT_OBJC_ISA_USAGE: YES_ERROR\nCLANG_WARN_DOCUMENTATION_COMMENTS: YES\nCLANG_WARN_EMPTY_BODY: YES\nCLANG_WARN_ENUM_CONVERSION: YES\nCLANG_WARN_INFINITE_RECURSION: YES\nCLANG_WARN_INT_CONVERSION: YES\nCLANG_WARN_NON_LITERAL_NULL_CONVERSION: YES\nCLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF: YES\nCLANG_WARN_OBJC_LITERAL_CONVERSION: YES\nCLANG_WARN_OBJC_ROOT_CLASS: YES_ERROR\nCLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: YES\nCLANG_WARN_RANGE_LOOP_ANALYSIS: YES\nCLANG_WARN_STRICT_PROTOTYPES: YES\nCLANG_WARN_SUSPICIOUS_MOVE: YES\nCLANG_WARN_UNGUARDED_AVAILABILITY: YES_AGGRESSIVE\nCLANG_WARN_UNREACHABLE_CODE: YES\nCLANG_WARN__DUPLICATE_METHOD_MATCH: YES\nCOPY_PHASE_STRIP: NO\nENABLE_STRICT_OBJC_MSGSEND: YES\nGCC_C_LANGUAGE_STANDARD: gnu11\nGCC_NO_COMMON_BLOCKS: YES\nGCC_WARN_64_TO_32_BIT_CONVERSION: YES\nGCC_WARN_ABOUT_RETURN_TYPE: YES_ERROR\nGCC_WARN_UNDECLARED_SELECTOR: YES\nGCC_WARN_UNINITIALIZED_AUTOS: YES_AGGRESSIVE\nGCC_WARN_UNUSED_FUNCTION: YES\nGCC_WARN_UNUSED_VARIABLE: YES\nMTL_FAST_MATH: YES\n\n# Target Settings\nPRODUCT_NAME: $(TARGET_NAME)\n\n# Swift Settings\nSWIFT_VERSION: '5.0'\n",
+    "SupportedDestinations/tvOS": "SUPPORTED_PLATFORMS: appletvos appletvsimulator\nTARGETED_DEVICE_FAMILY: '3'\n",
+    "SupportedDestinations/watchOS": "SUPPORTED_PLATFORMS: watchos watchsimulator\nTARGETED_DEVICE_FAMILY: '4'\n",
+    "SupportedDestinations/visionOS": "SUPPORTED_PLATFORMS: xros xrsimulator\nTARGETED_DEVICE_FAMILY: '7'\nSUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO\n",
+    "SupportedDestinations/iOS": "SUPPORTED_PLATFORMS: iphoneos iphonesimulator\nTARGETED_DEVICE_FAMILY: '1,2'\nSUPPORTS_MACCATALYST: NO\nSUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: YES\nSUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: YES\n",
+    "SupportedDestinations/macOS": "SUPPORTED_PLATFORMS: macosx\nSUPPORTS_MACCATALYST: NO\nSUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO\n",
+    "SupportedDestinations/macCatalyst": "SUPPORTS_MACCATALYST: YES\nSUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO\n",
+    "Products/watchkit2-extension": "LD_RUNPATH_SEARCH_PATHS: [\"$(inherited)\", \"@executable_path/Frameworks\", \"@executable_path/../../Frameworks\"]\nASSETCATALOG_COMPILER_COMPLICATION_NAME: Complication\n",
+    "Products/framework.static": "CURRENT_PROJECT_VERSION: 1\nDEFINES_MODULE: 'YES'\nCODE_SIGN_IDENTITY: \"\"\nDYLIB_COMPATIBILITY_VERSION: 1\nDYLIB_CURRENT_VERSION: 1\nVERSIONING_SYSTEM: \"apple-generic\"\nINSTALL_PATH: \"$(LOCAL_LIBRARY_DIR)/Frameworks\"\nDYLIB_INSTALL_NAME_BASE: \"@rpath\"\nSKIP_INSTALL: 'YES'\n",
+    "Products/tv-app-extension": "SKIP_INSTALL: 'YES'\nLD_RUNPATH_SEARCH_PATHS: [\"$(inherited)\", \"@executable_path/Frameworks\", \"@executable_path/../../Frameworks\"]\n",
+    "Products/app-extension.intents-service": "LD_RUNPATH_SEARCH_PATHS: [\"$(inherited)\", \"@executable_path/Frameworks\", \"@executable_path/../../Frameworks\", \"@executable_path/../../../../Frameworks\"]\n",
+    "Products/bundle.ui-testing": "BUNDLE_LOADER: $(TEST_HOST)\nLD_RUNPATH_SEARCH_PATHS: [\"$(inherited)\", \"@executable_path/Frameworks\", \"@loader_path/Frameworks\"]\n",
+    "Products/framework": "CURRENT_PROJECT_VERSION: 1\nDEFINES_MODULE: 'YES'\nCODE_SIGN_IDENTITY: \"\"\nDYLIB_COMPATIBILITY_VERSION: 1\nDYLIB_CURRENT_VERSION: 1\nVERSIONING_SYSTEM: \"apple-generic\"\nINSTALL_PATH: \"$(LOCAL_LIBRARY_DIR)/Frameworks\"\nDYLIB_INSTALL_NAME_BASE: \"@rpath\"\nSKIP_INSTALL: 'YES'\n",
+    "Products/app-extension": "LD_RUNPATH_SEARCH_PATHS: [\"$(inherited)\", \"@executable_path/Frameworks\", \"@executable_path/../../Frameworks\"]\n",
+    "Products/library.static": "SKIP_INSTALL: 'YES'\n",
+    "Products/app-extension.messages": "ASSETCATALOG_COMPILER_APPICON_NAME: iMessage App Icon\nLD_RUNPATH_SEARCH_PATHS: [\"$(inherited)\", \"@executable_path/Frameworks\", \"@executable_path/../../Frameworks\"]\n",
+    "Products/bundle.unit-test": "BUNDLE_LOADER: $(TEST_HOST)\nLD_RUNPATH_SEARCH_PATHS: [\"$(inherited)\", \"@executable_path/Frameworks\", \"@loader_path/Frameworks\"]\n"
+]
 
+extension SettingsPresetFile {
     public func getBuildSettings() -> BuildSettings? {
         if let cached = settingPresetSettings[path] {
             return cached.value
         }
-        let bundlePath = Path(Bundle.main.bundlePath)
-        let relativePath = Path("SettingPresets/\(path).yml")
-        var possibleSettingsPaths: [Path] = [
-            relativePath,
-            bundlePath + relativePath,
-            bundlePath + "../share/xcodegen/\(relativePath)",
-            Path(#file).parent().parent().parent() + relativePath,
-        ]
 
-        if let resourcePath = Bundle.main.resourcePath {
-            possibleSettingsPaths.append(Path(resourcePath) + relativePath)
-        }
-
-        if let symlink = try? (bundlePath + "xcodegen").symlinkDestination() {
-            possibleSettingsPaths = [
-                symlink.parent() + relativePath,
-            ] + possibleSettingsPaths
-        }
-        if let moduleResourcePath = Bundle.availableModule?.path(forResource: "SettingPresets", ofType: nil) {
-            possibleSettingsPaths.append(Path(moduleResourcePath) + "\(path).yml")
-        }
-
-        guard let settingsPath = possibleSettingsPaths.first(where: { $0.exists }) else {
+        guard let yaml = embeddedSettingPresets[path] else {
             switch self {
             case .base, .config, .platform, .supportedDestination:
                 print("No \"\(name)\" settings found")
@@ -256,7 +267,7 @@ extension SettingsPresetFile {
             return nil
         }
 
-        guard let dictionary = try? loadYamlDictionary(path: settingsPath) else {
+        guard let dictionary = try? loadYamlDictionary(contents: yaml) else {
             print("Error parsing \"\(name)\" settings")
             return nil
         }
@@ -264,49 +275,4 @@ extension SettingsPresetFile {
         settingPresetSettings[path] = .cached(buildSettings)
         return buildSettings
     }
-}
-
-private class BundleFinder {}
-
-/// The default SPM generated `Bundle.module` crashes on runtime if there is no .bundle file.
-/// Below implementation modified from generated `Bundle.module` code which call `fatalError` if .bundle file not found.
-private extension Bundle {
-    /// Returns the resource bundle associated with the current Swift module.
-    static let availableModule: Bundle? = {
-        let bundleName = "XcodeGen_XcodeGenKit"
-
-        let overrides: [URL]
-        #if DEBUG
-        // The 'PACKAGE_RESOURCE_BUNDLE_PATH' name is preferred since the expected value is a path. The
-        // check for 'PACKAGE_RESOURCE_BUNDLE_URL' will be removed when all clients have switched over.
-        // This removal is tracked by rdar://107766372.
-        if let override = ProcessInfo.processInfo.environment["PACKAGE_RESOURCE_BUNDLE_PATH"]
-                       ?? ProcessInfo.processInfo.environment["PACKAGE_RESOURCE_BUNDLE_URL"] {
-            overrides = [URL(fileURLWithPath: override)]
-        } else {
-            overrides = []
-        }
-        #else
-        overrides = []
-        #endif
-
-        let candidates = overrides + [
-            // Bundle should be present here when the package is linked into an App.
-            Bundle.main.resourceURL,
-
-            // Bundle should be present here when the package is linked into a framework.
-            Bundle(for: BundleFinder.self).resourceURL,
-
-            // For command-line tools.
-            Bundle.main.bundleURL,
-        ]
-
-        for candidate in candidates {
-            let bundlePath = candidate?.appendingPathComponent(bundleName + ".bundle")
-            if let bundle = bundlePath.flatMap(Bundle.init(url:)) {
-                return bundle
-            }
-        }
-        return nil
-    }()
 }

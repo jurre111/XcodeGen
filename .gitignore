@@ -12,3 +12,4 @@ xcodegen.artifactbundle.zip
 DerivedData
 .context
 .claude/worktrees
+main.py
