@@ -17,7 +17,6 @@ install: build
 	mkdir -p $(PREFIX)/bin
 	cp -f $(EXECUTABLE_PATH) $(INSTALL_PATH)
 	mkdir -p $(SHARE_PATH)
-	cp -R $(CURRENT_PATH)/SettingPresets $(SHARE_PATH)/SettingPresets
 
 build:
 	swift build $(SWIFT_BUILD_FLAGS)

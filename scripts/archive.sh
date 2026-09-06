@@ -13,7 +13,6 @@ mkdir -p $BINDIR
 cp -f "$1" $BINDIR
 
 mkdir -p $SHAREDIR
-cp -R SettingPresets $SHAREDIR/SettingPresets
 
 cp $INSTALLSH $TMP
 
